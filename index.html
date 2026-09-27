@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fortnite But Russian</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:,">
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+<div id="app"></div>
+
+<div id="blood-screen"></div>
+<canvas id="blood-canvas"></canvas>
+
+<div id="hud" class="hidden">
+  <div id="crosshair"><span></span><span></span><span></span><span></span></div>
+  <div id="hitmarker"></div>
+  <div id="topright">
+    <div id="minimap-wrap"><canvas id="minimap" width="180" height="180"></canvas></div>
+    <div id="stats">
+      <div><b id="alive">0</b><small>ALIVE</small></div>
+      <div><b id="kills">0</b><small>ELIMS</small></div>
+    </div>
+    <div id="storm-info"></div>
+  </div>
+  <div id="killfeed"></div>
+  <div id="scope"><div class="ring"></div></div>
+  <div id="tags"></div>
+  <div id="team"></div>
+  <div id="lives"></div>
+  <div id="respawn"></div>
+  <div id="center-msg"></div>
+  <div id="prompt"></div>
+  <div id="bottomleft">
+    <div class="bar shield"><div id="shield-fill"></div><span id="shield-txt">0</span></div>
+    <div class="bar health"><div id="health-fill"></div><span id="health-txt">100</span></div>
+  </div>
+  <div id="bottomright">
+    <div id="mats"><span class="wood-icon"></span><b id="wood">0</b></div>
+    <div id="ammo"></div>
+    <div id="hotbar"></div>
+    <div id="buildbar" class="hidden">
+      <div data-b="wall"><kbd>Z</kbd>WALL</div>
+      <div data-b="floor"><kbd>X</kbd>FLOOR</div>
+      <div data-b="ramp"><kbd>C</kbd>RAMP</div>
+    </div>
+  </div>
+</div>
+
+<div id="menu">
+  <div class="logo">
+    <div class="ru">ОФИЦИАЛЬНЫЙ ПРОДУКТ*</div>
+    <div class="t2">FORTNITE</div>
+    <div class="t1">BUT RUSSIAN</div>
+    <div class="sub">баттл рояль • 18+ • чрезвычайно кроваво</div>
+    <div class="sticker">NEW! 2OO6 EDITION</div>
+  </div>
+  <div class="modes">
+    <div class="opt" id="opt-team">
+      <span class="lbl">КОМАНДА / TEAM</span>
+      <div class="choices"><b data-v="1" class="on">SOLO</b><b data-v="2">DUOS</b><b data-v="4">SQUADS</b></div>
+    </div>
+    <div class="opt" id="opt-mode">
+      <span class="lbl">РЕЖИМ / MODE</span>
+      <div class="choices"><b data-v="classic" class="on">CLASSIC</b><b data-v="reload">RELOAD ×3 LIFE</b></div>
+    </div>
+  </div>
+  <button id="play">ИГРАТЬ / PLAY</button>
+  <div class="keys">
+    WASD move • SPACE jump / drop • SHIFT sprint • C crouch • MOUSE shoot • RMB aim • R reload • E pick up<br>
+    1-5 weapons • V first/third person • Q build mode (Z wall, X floor, C ramp)
+  </div>
+  <div class="fine">*не официальный. not affiliated with epic games or with russia. all bots are fictional comrades.</div>
+</div>
+
+<div id="end" class="hidden">
+  <div id="end-title"></div>
+  <div id="end-sub"></div>
+  <button id="again">ЕЩЁ РАЗ / AGAIN</button>
+  <button id="tomenu" class="small">MENU</button>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

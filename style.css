@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Russo+One&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Russo One', sans-serif; color: #fff; user-select: none; }
+#app canvas { display: block; }
+.hidden { display: none !important; }
+
+#blood-screen { position: fixed; inset: 0; pointer-events: none; opacity: 0; transition: opacity .15s;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(120,0,0,.55) 75%, rgba(60,0,0,.95) 100%); }
+#blood-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+#hud { position: fixed; inset: 0; pointer-events: none; }
+#crosshair { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+#crosshair span { position: absolute; background: #fff; box-shadow: 0 0 2px #000; }
+#crosshair span:nth-child(1) { width: 2px; height: 8px; left: -1px; top: -18px; }
+#crosshair span:nth-child(2) { width: 2px; height: 8px; left: -1px; top: 10px; }
+#crosshair span:nth-child(3) { width: 8px; height: 2px; top: -1px; left: -18px; }
+#crosshair span:nth-child(4) { width: 8px; height: 2px; top: -1px; left: 10px; }
+#hitmarker { position: absolute; left: 50%; top: 50%; width: 24px; height: 24px; margin: -12px 0 0 -12px; opacity: 0;
+  background: linear-gradient(45deg, transparent 45%, #fff 45%, #fff 55%, transparent 55%), linear-gradient(-45deg, transparent 45%, #fff 45%, #fff 55%, transparent 55%);
+  -webkit-mask: radial-gradient(circle, transparent 5px, #000 6px); mask: radial-gradient(circle, transparent 5px, #000 6px); }
+#hitmarker.head { background: linear-gradient(45deg, transparent 45%, #ff3 45%, #ff3 55%, transparent 55%), linear-gradient(-45deg, transparent 45%, #ff3 45%, #ff3 55%, transparent 55%); }
+#hitmarker.kill { background: linear-gradient(45deg, transparent 42%, #f22 42%, #f22 58%, transparent 58%), linear-gradient(-45deg, transparent 42%, #f22 42%, #f22 58%, transparent 58%); }
+
+#topright { position: absolute; right: 16px; top: 16px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+#minimap-wrap { width: 180px; height: 180px; border: 3px solid #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,.5); }
+#stats { display: flex; gap: 8px; }
+#stats div { background: rgba(0,0,0,.45); padding: 4px 10px; border-radius: 4px; text-align: center; }
+#stats b { font-size: 20px; display: block; line-height: 1; }
+#stats small { font-size: 10px; opacity: .8; }
+#storm-info { background: rgba(80,20,140,.7); padding: 4px 10px; border-radius: 4px; font-size: 13px; }
+
+#killfeed { position: absolute; left: 16px; top: 16px; display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
+#killfeed div { background: rgba(0,0,0,.5); padding: 4px 10px; border-radius: 4px; animation: fadeout 7s forwards; }
+#killfeed .you { color: #ffd84a; }
+#killfeed .how { color: #ff4a4a; }
+@keyframes fadeout { 0%,85% { opacity: 1 } 100% { opacity: 0 } }
+
+#center-msg { position: absolute; left: 0; right: 0; top: 22%; text-align: center; font-family: 'Luckiest Guy', cursive; font-size: 34px;
+  text-shadow: 0 3px 0 #000, 0 0 12px rgba(0,0,0,.7); letter-spacing: 1px; }
+#prompt { position: absolute; left: 50%; top: 62%; transform: translateX(-50%); background: rgba(0,0,0,.6); padding: 6px 14px; border-radius: 4px; font-size: 14px; display: none; }
+#prompt kbd, #buildbar kbd { background: #fff; color: #000; padding: 0 6px; border-radius: 3px; margin-right: 6px; font-family: inherit; }
+
+#bottomleft { position: absolute; left: 20px; bottom: 20px; width: 300px; display: flex; flex-direction: column; gap: 5px; }
+.bar { position: relative; height: 22px; background: rgba(0,0,0,.5); border: 2px solid rgba(255,255,255,.8); transform: skewX(-12deg); overflow: hidden; }
+.bar > div { height: 100%; transition: width .2s; }
+.bar span { position: absolute; left: 8px; top: 0; font-size: 15px; line-height: 18px; transform: skewX(12deg); text-shadow: 0 1px 2px #000; }
+.health > div { background: linear-gradient(#6f6, #1c1); }
+.shield > div { background: linear-gradient(#7cf, #18e); }
+
+#bottomright { position: absolute; right: 20px; bottom: 20px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+#mats { background: rgba(0,0,0,.5); padding: 4px 10px; border-radius: 4px; display: flex; align-items: center; gap: 6px; }
+.wood-icon { width: 16px; height: 16px; background: linear-gradient(#c08040, #7a4a1c); border-radius: 3px; display: inline-block; }
+#ammo { font-size: 26px; text-shadow: 0 2px 0 #000; }
+#hotbar { display: flex; gap: 6px; }
+.slot { width: 64px; height: 64px; border: 3px solid rgba(255,255,255,.4); border-radius: 6px; background: rgba(0,0,0,.45); position: relative; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; }
+.slot.sel { border-color: #fff; transform: translateY(-6px); }
+.slot .n { position: absolute; left: 4px; top: 2px; font-size: 11px; opacity: .7; }
+.slot .nm { padding: 0 2px; }
+.r0 { background: linear-gradient(transparent 50%, rgba(160,160,160,.6)); }
+.r1 { background: linear-gradient(transparent 50%, rgba(60,200,60,.6)); }
+.r2 { background: linear-gradient(transparent 50%, rgba(60,130,255,.7)); }
+.r3 { background: linear-gradient(transparent 50%, rgba(180,70,255,.7)); }
+.r4 { background: linear-gradient(transparent 50%, rgba(255,160,20,.8)); }
+#buildbar { display: flex; gap: 6px; }
+#buildbar div { background: rgba(0,0,0,.5); padding: 8px 10px; border-radius: 4px; font-size: 12px; border: 2px solid transparent; }
+#buildbar div.sel { border-color: #6cf; }
+
+#menu, #end { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px;
+  background: radial-gradient(ellipse at center, rgba(40,20,90,.55), rgba(0,0,0,.85)); }
+.logo { text-align: center; font-family: 'Luckiest Guy', cursive; transform: rotate(-3deg); }
+.logo .ru { font-family: 'Russo One'; color: #d22; font-size: 20px; letter-spacing: 10px; }
+.logo .t1 { font-size: 44px; color: #fff; text-shadow: 0 4px 0 #b00, 0 8px 0 #300; }
+.logo .t2 { font-size: 110px; line-height: .9; background: linear-gradient(#fff36b, #ff9d00); -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 6px 0 #5a2a9a) drop-shadow(0 10px 8px rgba(0,0,0,.6)); }
+.logo .sub { font-family: 'Russo One'; font-size: 14px; color: #f66; margin-top: 10px; letter-spacing: 2px; }
+button { font-family: 'Luckiest Guy', cursive; font-size: 34px; padding: 12px 60px; border: none; border-radius: 8px; cursor: pointer;
+  background: linear-gradient(#ffe45c, #f7b500); color: #3a2200; box-shadow: 0 6px 0 #a06a00; transition: transform .1s; }
+button:hover { transform: scale(1.06); }
+button:active { transform: translateY(4px); box-shadow: 0 2px 0 #a06a00; }
+.keys { font-size: 12px; opacity: .7; text-align: center; line-height: 1.8; }
+#end-title { font-family: 'Luckiest Guy', cursive; font-size: 90px; text-shadow: 0 6px 0 #000; }
+#end-title.win { background: linear-gradient(#fff36b, #ff9d00); -webkit-background-clip: text; background-clip: text; color: transparent; }
+#end-title.lose { color: #e11; }
+#end-sub { font-size: 20px; }
+
+/* ---- v2 additions ---- */
+.logo .t1 { font-size: 54px; margin-top: -6px; color: #fff; text-shadow: 0 4px 0 #d52b1e, 0 8px 0 #0039a6, 0 12px 10px rgba(0,0,0,.6); }
+.logo .sticker { position: absolute; right: -70px; top: 30px; background: #ffe400; color: #d20000; font-family: 'Russo One'; font-size: 15px; padding: 6px 12px;
+  transform: rotate(18deg); border: 3px dashed #d20000; animation: pulse 0.9s infinite alternate; }
+.logo { position: relative; }
+@keyframes pulse { to { transform: rotate(18deg) scale(1.12); } }
+.modes { display: flex; gap: 22px; }
+.opt { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.opt .lbl { font-size: 11px; letter-spacing: 2px; opacity: .75; }
+.choices { display: flex; background: rgba(0,0,0,.45); border-radius: 6px; padding: 3px; gap: 3px; }
+.choices b { font-family: 'Luckiest Guy'; font-weight: normal; font-size: 18px; padding: 6px 14px; border-radius: 4px; cursor: pointer; color: #bbb; }
+.choices b.on { background: linear-gradient(#4aa8ff, #1a5ad0); color: #fff; box-shadow: 0 3px 0 #0a2a70; }
+.fine { font-size: 10px; opacity: .45; font-style: italic; }
+button.small { font-size: 20px; padding: 8px 30px; background: linear-gradient(#ddd, #999); box-shadow: 0 4px 0 #555; color: #222; }
+
+#scope { position: absolute; inset: 0; display: none; background: radial-gradient(circle at center, transparent 0, transparent 33vh, #000 33.3vh); }
+#scope .ring { position: absolute; left: 50%; top: 50%; width: 66.6vh; height: 66.6vh; transform: translate(-50%,-50%); border-radius: 50%; border: 3px solid #111;
+  background: linear-gradient(#000,#000) center/100% 1px no-repeat, linear-gradient(#000,#000) center/1px 100% no-repeat; }
+#tags { position: absolute; inset: 0; }
+.tag { position: absolute; transform: translate(-50%, -100%); font-size: 12px; white-space: nowrap; text-shadow: 0 1px 2px #000; }
+.tag .hb { height: 4px; width: 60px; background: rgba(0,0,0,.6); margin: 2px auto 0; }
+.tag .hb i { display: block; height: 100%; background: #5f5; }
+.tag.mate { color: #6cf; }
+.tag.mate::after { content: '▼'; display: block; text-align: center; font-size: 10px; }
+#team { position: absolute; left: 20px; bottom: 90px; display: flex; flex-direction: column; gap: 4px; }
+#team .m { background: rgba(0,0,0,.45); padding: 3px 8px; border-radius: 4px; font-size: 12px; width: 200px; }
+#team .m .b { height: 4px; background: rgba(255,255,255,.2); margin-top: 2px; } #team .m .b i { display: block; height: 100%; background: #5f5; }
+#team .m.dead { opacity: .45; text-decoration: line-through; }
+#lives { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); font-size: 22px; letter-spacing: 4px; text-shadow: 0 2px 0 #000; }
+#respawn { position: absolute; left: 0; right: 0; top: 40%; text-align: center; font-family: 'Luckiest Guy'; font-size: 48px; color: #ffd84a; text-shadow: 0 4px 0 #000; }
+#crosshair { transition: transform .08s; }
